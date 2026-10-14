@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Usuarios | Cabeza de Algodón</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../principal/dashboard.css">
+
+    <link rel="stylesheet" href="/css/cyberdeck.css">
+</head>
+
+<body>
+
+    <header class="dashboard-header">
+        <div class="logo-text">
+            Asilo Cabeza de Algodón
+        </div>
+
+        <div class="user-info">
+            <span>Personal del Asilo</span>
+
+            <button
+                type="button"
+                class="btn-outline"
+                onclick="cerrarSesion()">
+                Salir
+            </button>
+        </div>
+    </header>
+
+
+    <main class="container py-4">
+
+        <div class="gestion-toolbar"><h1>Usuarios</h1>
+            <button type="button" class="btn btn-secondary" id="btnVolverMenu">← Volver al menú</button>
+        </div>
+        <div id="filtrosEstado" class="filtros-estado" role="group" aria-label="Filtrar por estado">
+    <button type="button" class="btn-filtro" data-estado="" aria-pressed="true">Todos</button>
+    <button type="button" class="btn-filtro" data-estado="Activo" aria-pressed="false">Activos</button>
+    <button type="button" class="btn-filtro" data-estado="Inactivo" aria-pressed="false">Inactivos</button>
+</div>
+        <div class="herramientas-modulo">
+            <input type="search" id="buscarUsuario" class="input-busqueda" aria-label="Buscar usuario" placeholder="Buscar usuario...">
+            <button type="button" class="btn btn-primary" id="btnNuevoUsuario">+ Nuevo usuario</button>
+        </div>
+        <div id="mensaje"></div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Tipo de personal</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaUsuarios">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+    <!-- MODAL USUARIO -->
+
+    <div
+        class="modal fade"
+        id="modalUsuario"
+        tabindex="-1"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5
+                        class="modal-title"
+                        id="tituloModal">
+                        Nuevo Usuario
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <div id="mensajeUsuario" role="alert" aria-live="polite"></div>
+                    <form id="formUsuario">
+
+                        <input
+                            type="hidden"
+                            id="idUsuario">
+
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Nombres
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nombres">
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Apellidos
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="apellidos">
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Correo
+                                </label>
+
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="correo">
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Teléfono
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="telefono">
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="tipoPersonal" class="form-label">Tipo de personal *</label>
+                            <select id="tipoPersonal" class="form-select" required>
+                                <option value="Asilo">Asilo</option><option value="Fundacion">Fundación</option>
+                            </select>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Rol *
+                                </label>
+
+                                <select class="form-select" id="rol" required><option value="">Seleccione...</option></select>
+                                <button type="button" class="btn btn-outline-primary mt-2" id="btnNuevoRol">+ Nuevo rol</button>
+                                <p data-aviso-catalogo role="status" class="aviso-catalogo"></p>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Estado
+                                </label>
+
+                                <select
+                                    class="form-select"
+                                    id="estado">
+
+                                    <option value="">Sin definir (histórico)</option>
+                                    <option value="Activo">
+                                        Activo
+                                    </option>
+
+                                    <option value="Inactivo">
+                                        Inactivo
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Contraseña
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="contrasena">
+
+                            <small
+                                id="ayudaContrasena"
+                                class="text-muted">
+
+                                Mínimo 8 caracteres.
+
+                            </small>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="btnGuardarUsuario">
+                        Guardar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="/compartido/cyberdeck.js"></script>
+    <script src="../compartido/formatos.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    
+    <div class="modal fade" id="modalNuevoRol" tabindex="-1" aria-labelledby="modalNuevoRolTitulo" aria-hidden="true">
+        <div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title" id="modalNuevoRolTitulo">Nuevo rol</h5></div>
+            <div class="modal-body">
+                <label for="modalNuevoRolNombre" class="form-label">Nombre *</label>
+                <input id="modalNuevoRolNombre" class="form-control" type="text" maxlength="100" autocomplete="off" required>
+                <p class="text-danger mt-2" data-mensaje role="alert"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-guardar>Guardar</button>
+            </div>
+        </div></div>
+    </div>
+    <script src="../compartido/catalogos.js"></script>
+    <script src="usuarios.js"></script>
+
+</body>
+</html>

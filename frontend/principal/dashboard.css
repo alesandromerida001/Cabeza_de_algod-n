@@ -1,0 +1,862 @@
+/* =========================================================
+   ASILO CABEZA DE ALGODÓN
+   CSS BASE DEL SISTEMA
+   Preparado para el futuro rediseño Cyberpunk leve
+   ========================================================= */
+
+
+/* =========================================================
+   1. VARIABLES GLOBALES
+   ========================================================= */
+
+:root {
+
+    /* Colores actuales.
+       Más adelante cambiaremos principalmente estas variables
+       para aplicar la nueva identidad visual. */
+    --color-primario: #3B6B56;
+    --color-secundario: #2A4D5C;
+
+    --fondo-principal: #3B6B56;
+    --fondo-superficie: #F7F5F0;
+    --fondo-tarjeta: #FFFFFF;
+
+    --borde: #D1D5D0;
+
+    --texto-principal: #252525;
+    --texto-secundario: #666666;
+    --texto-claro: #FFFFFF;
+
+    /* Estados */
+    --error: #9B3C42;
+    --fondo-error: #FBEDEF;
+
+    --exito: #2F6B4A;
+    --fondo-exito: #EAF4ED;
+
+    --advertencia: #9A6700;
+    --fondo-advertencia: #FFF4CE;
+
+    /* Medidas reutilizables */
+    --radio: 8px;
+    --radio-grande: 12px;
+
+    --sombra-suave: 0 4px 10px rgba(0, 0, 0, 0.15);
+    --sombra-media: 0 8px 20px rgba(0, 0, 0, 0.20);
+}
+
+
+/* =========================================================
+   2. CONFIGURACIÓN GENERAL
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--fondo-principal);
+
+    color: var(--texto-principal);
+
+    font-family:
+        'Segoe UI',
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+}
+
+
+/* =========================================================
+   3. ENCABEZADO GENERAL
+   ========================================================= */
+
+.dashboard-header {
+    width: 100%;
+
+    background-color: var(--fondo-tarjeta);
+
+    padding: 1rem 2rem;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.10);
+
+    position: relative;
+    z-index: 10;
+}
+
+.logo-text {
+    font-weight: 700;
+    color: var(--color-primario);
+    font-size: 1.2rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-outline {
+    background: transparent;
+
+    border: 1px solid var(--color-primario);
+
+    color: var(--color-primario);
+
+    padding: 0.5rem 1rem;
+
+    border-radius: var(--radio);
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+}
+
+.btn-outline:hover {
+    background-color: var(--color-primario);
+    color: var(--texto-claro);
+}
+
+
+/* =========================================================
+   4. DASHBOARD PRINCIPAL
+   ========================================================= */
+
+.dashboard-main {
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 2rem;
+}
+
+.grid-menu {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 2rem;
+
+    width: 100%;
+    max-width: 800px;
+}
+
+.tarjeta-menu {
+    background-color: var(--borde);
+
+    border: none;
+
+    border-radius: var(--radio-grande);
+
+    padding: 3rem 1rem;
+
+    cursor: pointer;
+
+    box-shadow: var(--sombra-suave);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        background-color 0.2s;
+}
+
+.tarjeta-menu:hover {
+    transform: translateY(-5px);
+
+    box-shadow: var(--sombra-media);
+
+    background-color: var(--fondo-superficie);
+}
+
+.tarjeta-menu h2 {
+    color: var(--texto-principal);
+
+    font-size: 1.8rem;
+
+    line-height: 1.2;
+}
+
+
+/* Tarjetas todavía no disponibles */
+
+.tarjeta-menu.deshabilitada {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    position: relative;
+}
+
+.tarjeta-menu.deshabilitada:hover {
+    transform: none;
+
+    box-shadow: var(--sombra-suave);
+
+    background-color: var(--borde);
+}
+
+.etiqueta-proximamente {
+    display: block;
+
+    margin-top: 0.4rem;
+
+    color: var(--color-secundario);
+
+    font-size: 0.7rem;
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   5. PANTALLAS DE GESTIÓN
+   Residentes, Usuarios, Solicitudes, Finanzas, etc.
+   ========================================================= */
+
+.gestion-main {
+    flex: 1;
+
+    width: 100%;
+
+    padding: 2rem 3rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gestion-toolbar {
+    width: 100%;
+    max-width: 1100px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 1rem;
+
+    margin-bottom: 1.2rem;
+}
+
+.gestion-toolbar h1 {
+    color: var(--texto-claro);
+
+    font-size: 1.6rem;
+
+    margin: 0;
+}
+
+.toolbar-acciones {
+    display: flex;
+
+    gap: 0.75rem;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   6. ESTADÍSTICAS
+   ========================================================= */
+
+.stats-fila {
+    width: 100%;
+    max-width: 1100px;
+
+    display: flex;
+
+    gap: 1.5rem;
+
+    margin-bottom: 1.5rem;
+
+    flex-wrap: wrap;
+}
+
+.stat-tarjeta {
+    background-color: var(--fondo-superficie);
+
+    border-radius: var(--radio-grande);
+
+    padding: 1rem 1.5rem;
+
+    box-shadow: var(--sombra-suave);
+}
+
+.stat-numero {
+    margin: 0;
+
+    color: var(--color-primario);
+
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.stat-etiqueta {
+    margin: 0.2rem 0 0;
+
+    color: var(--texto-secundario);
+
+    font-size: 0.85rem;
+}
+
+
+/* =========================================================
+   7. TABLAS
+   ========================================================= */
+
+.tabla-contenedor {
+    width: 100%;
+    max-width: 1100px;
+
+    padding: 1rem;
+
+    background-color: var(--fondo-superficie);
+
+    border-radius: var(--radio-grande);
+
+    box-shadow: var(--sombra-suave);
+
+    overflow-x: auto;
+}
+
+.tabla-datos {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.tabla-datos th,
+.tabla-datos td {
+    padding: 0.8rem;
+
+    text-align: left;
+
+    border-bottom: 1px solid var(--borde);
+
+    font-size: 0.92rem;
+
+    white-space: nowrap;
+}
+
+.tabla-datos th {
+    color: var(--color-secundario);
+
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+.tabla-datos tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.025);
+}
+
+
+/* =========================================================
+   8. ESTADOS
+   ========================================================= */
+
+.badge-estado {
+    display: inline-block;
+
+    padding: 0.25rem 0.7rem;
+
+    border-radius: 20px;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.badge-estado.Activo {
+    background-color: var(--fondo-exito);
+    color: var(--exito);
+}
+
+.badge-estado.Inactivo {
+    background-color: var(--fondo-error);
+    color: var(--error);
+}
+
+
+/* Después podremos usar estos en solicitudes */
+
+.badge-estado.Pendiente {
+    background-color: var(--fondo-advertencia);
+    color: var(--advertencia);
+}
+
+.badge-estado.Finalizada {
+    background-color: var(--fondo-exito);
+    color: var(--exito);
+}
+
+
+/* =========================================================
+   9. BOTONES DEL SISTEMA
+   ========================================================= */
+
+.btn-primario {
+    background-color: #194b79;
+
+    color: var(--texto-claro);
+
+    border: 1px solid #d7e8f8;
+
+    padding: 0.7rem 1.2rem;
+
+    border-radius: var(--radio);
+
+    font-size: 0.95rem;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.2s;
+}
+
+.btn-primario:hover {
+    background-color: var(--color-secundario);
+}
+
+.btn-secundario {
+    background-color: var(--borde);
+
+    color: var(--texto-principal);
+
+    border: none;
+
+    padding: 0.7rem 1.2rem;
+
+    border-radius: var(--radio);
+
+    cursor: pointer;
+}
+
+.btn-secundario:hover {
+    background-color: #BEC3BD;
+}
+
+.btn-compacto {
+    width: auto;
+
+    margin-top: 0;
+
+    padding: 0.6rem 1.2rem;
+}
+
+
+/* Botones pequeños para tablas */
+
+.btn-icono {
+    background-color: #e6edf3;
+    color: #203d53;
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 0.82rem;
+
+    padding: 0.4rem 0.75rem;
+
+    border-radius: 6px;
+
+    margin-right: 0.4rem;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s;
+}
+
+.btn-ver {
+    background-color: var(--borde);
+
+    color: var(--color-secundario);
+}
+
+.btn-ver:hover {
+    background-color: var(--color-secundario);
+
+    color: var(--texto-claro);
+}
+
+.btn-editar {
+    background-color: var(--fondo-advertencia);
+
+    color: var(--advertencia);
+}
+
+.btn-editar:hover {
+    background-color: var(--advertencia);
+
+    color: var(--texto-claro);
+}
+
+.btn-baja {
+    background-color: var(--fondo-error);
+
+    color: var(--error);
+}
+
+.btn-baja:hover {
+    background-color: var(--error);
+
+    color: var(--texto-claro);
+}
+
+
+/* =========================================================
+   10. FORMULARIOS
+   ========================================================= */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1rem;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.5rem;
+}
+
+.form-grupo label {
+    color: var(--color-secundario);
+
+    font-weight: 600;
+}
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea {
+    width: 100%;
+
+    padding: 0.75rem;
+
+    border: 1px solid var(--borde);
+
+    border-radius: var(--radio);
+
+    background-color: var(--fondo-tarjeta);
+
+    color: var(--texto-principal);
+
+    font-size: 0.95rem;
+
+    outline: none;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus,
+.form-grupo textarea:focus {
+    border-color: var(--color-primario);
+
+    box-shadow:
+        0 0 0 2px rgba(59, 107, 86, 0.15);
+}
+
+.form-grupo textarea {
+    resize: vertical;
+
+    min-height: 90px;
+}
+
+.form-seccion {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+
+    padding-bottom: 0.3rem;
+
+    color: var(--color-primario);
+
+    border-bottom: 2px solid var(--borde);
+
+    font-size: 1.1rem;
+}
+
+.ancho-completo {
+    grid-column: 1 / -1;
+}
+
+.check-grupo {
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 0.5rem;
+}
+
+.check-grupo input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+
+    cursor: pointer;
+}
+
+.check-grupo label {
+    margin: 0;
+
+    cursor: pointer;
+}
+
+
+/* Campos en modo solo lectura */
+
+.campo-bloqueado,
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background-color: #ECECEC !important;
+
+    color: #555555 !important;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   11. BUSCADOR REUTILIZABLE
+   ========================================================= */
+
+.input-busqueda {
+    min-width: 240px;
+
+    padding: 0.6rem 0.9rem;
+
+    border: 1px solid var(--borde);
+
+    border-radius: var(--radio);
+
+    background-color: var(--fondo-tarjeta);
+
+    outline: none;
+}
+
+.input-busqueda:focus {
+    border-color: var(--color-primario);
+}
+
+
+/* =========================================================
+   12. MODALES BOOTSTRAP
+   IMPORTANTE:
+   Ya NO definimos .modal manualmente.
+   Bootstrap controla apertura, cierre y backdrop.
+   ========================================================= */
+
+.modal-content {
+    border: none;
+
+    border-radius: var(--radio-grande);
+
+    background-color: var(--fondo-superficie);
+
+    box-shadow: var(--sombra-media);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--borde);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--borde);
+}
+
+.modal-title {
+    color: var(--color-secundario);
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   13. AVISOS / TOAST DEL SISTEMA
+   ========================================================= */
+
+.toast-sistema {
+    position: fixed;
+
+    top: 24px;
+    right: 24px;
+
+    max-width: 360px;
+
+    padding: 14px 18px;
+
+    border-radius: var(--radio);
+
+    font-size: 0.95rem;
+
+    line-height: 1.45;
+
+    box-shadow: var(--sombra-media);
+
+    z-index: 2000;
+
+    animation: entrada-toast 0.25s ease;
+}
+
+.toast-sistema.oculto {
+    display: none;
+}
+
+.toast-sistema.exito {
+    background-color: var(--fondo-exito);
+
+    color: var(--exito);
+
+    border-left: 4px solid var(--exito);
+}
+
+.toast-sistema.error {
+    background-color: var(--fondo-error);
+
+    color: var(--error);
+
+    border-left: 4px solid var(--error);
+}
+
+.oculto {
+    display: none !important;
+}
+
+@keyframes entrada-toast {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   14. RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-header {
+        padding: 1rem;
+    }
+
+    .grid-menu {
+        grid-template-columns: 1fr;
+
+        gap: 1rem;
+    }
+
+    .dashboard-main,
+    .gestion-main {
+        padding: 1rem;
+    }
+
+    .gestion-toolbar {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .toolbar-acciones {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .input-busqueda {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-fila {
+        flex-direction: column;
+    }
+
+    .stat-tarjeta {
+        width: 100%;
+    }
+}
+
+/* Ajustes de usabilidad, sin rediseño general. */
+.filtros-estado,
+.herramientas-modulo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 1100px;
+    margin-bottom: 1rem;
+}
+.herramientas-modulo .input-busqueda { flex: 1; min-width: 200px; }
+.btn-filtro {
+    padding: 0.5rem 1rem;
+    border: 1px solid #a6b7c8;
+    border-radius: 6px;
+    background: #fff;
+    color: #203d53;
+    cursor: pointer;
+}
+.btn-filtro[aria-pressed="true"] { background: #194b79; color: #fff; border-color: #fff; }
+.btn-filtro:hover { background: #dce9f4; color: #173651; }
+.btn-primary { background-color: #194b79; border-color: #d7e8f8; color: #fff; }
+.btn-primary:hover, .btn-primario:hover { background-color: #103754; color: #fff; }
+.btn-secondary { background-color: #53606c; border-color: #d7e0e7; color: #fff; }
+.btn-secondary:hover { background-color: #36434f; color: #fff; }
+.btn-outline-primary { background-color: #fff; border-color: #194b79; color: #194b79; }
+.btn-outline-primary:hover { background-color: #194b79; color: #fff; }
+.btn-icono:hover { box-shadow: inset 0 0 0 2px currentColor; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid #152f4a;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 5px #fff;
+}
+button:disabled { opacity: 0.55; cursor: not-allowed; filter: grayscale(0.5); }
+.aviso-catalogo { color: #414141; margin-top: 0.5rem; }

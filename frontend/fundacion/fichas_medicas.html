@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichas Médicas | Cabeza de Algodón</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../principal/dashboard.css">
+    <link rel="stylesheet" href="visitas_realizadas.css">
+    <link rel="stylesheet" href="fichas_medicas.css">
+    <link rel="stylesheet" href="/css/cyberdeck.css">
+</head>
+
+<body>
+    <header class="dashboard-header">
+        <div class="logo-text">Asilo Cabeza de Algodón</div>
+        <div class="user-info"><span>Fundación</span><button id="btnCerrarSesion" class="btn-outline"
+                type="button">Salir</button></div>
+    </header>
+    <main class="gestion-main">
+        <div class="gestion-toolbar">
+            <h1>Fichas Médicas</h1><a href="fundacion_dashboard.html" class="btn btn-secondary">← Volver al menú</a>
+        </div>
+        <section class="panel-ficha" aria-label="Buscar residente">
+            <label for="buscarResidente" class="form-label">Buscar por nombre, apellido, nombre completo o DPI</label>
+            <div class="d-flex gap-2"><input type="search" id="buscarResidente" class="form-control" maxlength="100"
+                    autocomplete="off" aria-describedby="ayudaBusqueda" aria-controls="resultadosBusqueda"
+                    placeholder="Escriba al menos 2 caracteres"><button id="cambiarResidente" class="btn btn-secondary"
+                    type="button">Limpiar</button></div>
+            <p id="ayudaBusqueda" role="status" aria-live="polite" class="mt-2 mb-0">Seleccione un residente para
+                consultar su ficha.</p>
+            <div id="resultadosBusqueda" class="list-group mt-2" aria-label="Residentes encontrados"></div>
+        </section>
+        <p id="mensajeFicha" class="aviso-visitas" role="status" aria-live="polite"></p>
+        <article id="fichaResidente" class="panel-ficha" hidden>
+            <h2 class="fs-4">Ficha del residente seleccionado</h2>
+            <p id="avisoSinFicha" role="status" class="alert alert-warning" hidden></p>
+            <section class="detalle-seccion">
+                <h3>Datos generales</h3>
+                <dl class="detalle-visita">
+                    <div id="grupo_nombre">
+                        <dt>Nombre completo</dt>
+                        <dd id="ficha_nombre">No registrado</dd>
+                    </div>
+                    <div id="grupo_dpi">
+                        <dt>DPI</dt>
+                        <dd id="ficha_dpi">No registrado</dd>
+                    </div>
+                    <div id="grupo_fecha_nacimiento">
+                        <dt>Fecha de nacimiento</dt>
+                        <dd id="ficha_fecha_nacimiento">No registrado</dd>
+                    </div>
+                    <div id="grupo_edad">
+                        <dt>Edad</dt>
+                        <dd id="ficha_edad">No registrado</dd>
+                    </div>
+                    <div id="grupo_genero">
+                        <dt>Género</dt>
+                        <dd id="ficha_genero">No registrado</dd>
+                    </div>
+                </dl>
+            </section>
+            <section class="detalle-seccion">
+                <h3>Datos médicos</h3>
+                <dl class="detalle-visita">
+                    <div id="grupo_tipo_sangre">
+                        <dt>Tipo de sangre</dt>
+                        <dd id="ficha_tipo_sangre">No registrado</dd>
+                    </div>
+                    <div id="grupo_alergias">
+                        <dt>Alergias</dt>
+                        <dd id="ficha_alergias">No registrado</dd>
+                    </div>
+                    <div id="grupo_padecimientos">
+                        <dt>Padecimientos</dt>
+                        <dd id="ficha_padecimientos">No registrado</dd>
+                    </div>
+                    <div id="grupo_psicopatologias">
+                        <dt>Psicopatologías</dt>
+                        <dd id="ficha_psicopatologias">No registrado</dd>
+                    </div>
+                    <div id="grupo_medicamentos_habituales">
+                        <dt>Medicamentos habituales</dt>
+                        <dd id="ficha_medicamentos_habituales">No registrado</dd>
+                    </div>
+                    <div id="grupo_antecedentes">
+                        <dt>Antecedentes</dt>
+                        <dd id="ficha_antecedentes">No registrado</dd>
+                    </div>
+                    <div id="grupo_requiere_asistencia_especial">
+                        <dt>Requiere asistencia especial</dt>
+                        <dd id="ficha_requiere_asistencia_especial">No registrado</dd>
+                    </div>
+                    <div id="grupo_descripcion_asistencia">
+                        <dt>Descripción de asistencia especial</dt>
+                        <dd id="ficha_descripcion_asistencia">No registrado</dd>
+                    </div>
+                    <div id="grupo_observaciones">
+                        <dt>Observaciones</dt>
+                        <dd id="ficha_observaciones">No registrado</dd>
+                    </div>
+                </dl>
+            </section>
+        </article>
+        <section id="historialResidente" class="panel-ficha" hidden>
+            <h2 class="fs-4">Historial de visitas médicas</h2>
+            <p id="mensajeHistorial" role="status" aria-live="polite"></p>
+            <div class="table-responsive">
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Especialidad</th>
+                            <th scope="col">Médico</th>
+                            <th scope="col">Diagnóstico</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaHistorial"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <div class="modal fade" id="modalVisita" tabindex="-1" aria-labelledby="tituloVisita" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="tituloVisita">Detalle de visita médica</h2><button type="button"
+                        class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <section class="detalle-seccion">
+                        <h3>Datos generales</h3>
+                        <dl class="detalle-visita">
+                            <div>
+                                <dt>Residente</dt>
+                                <dd id="detalle_residente">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Especialidad</dt>
+                                <dd id="detalle_especialidad">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Médico</dt>
+                                <dd id="detalle_medico">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Fecha de visita</dt>
+                                <dd id="detalle_fecha_visita">No registrado</dd>
+                            </div>
+                        </dl>
+                    </section>
+                    <section class="detalle-seccion">
+                        <h3>Atención médica</h3>
+                        <dl class="detalle-visita">
+                            <div>
+                                <dt>Diagnóstico</dt>
+                                <dd id="detalle_diagnostico">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Exámenes</dt>
+                                <dd id="detalle_examenes">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Resultados</dt>
+                                <dd id="detalle_resultados_examenes">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Medicamentos</dt>
+                                <dd id="detalle_medicamentos">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Cantidad</dt>
+                                <dd id="detalle_cantidad_medicamentos">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Indicaciones</dt>
+                                <dd id="detalle_indicaciones">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Observaciones</dt>
+                                <dd id="detalle_observaciones">No registrado</dd>
+                            </div>
+                        </dl>
+                    </section>
+                    <section class="detalle-seccion">
+                        <h3>Detalle económico</h3>
+                        <dl class="detalle-visita">
+                            <div>
+                                <dt>Costo consulta</dt>
+                                <dd id="detalle_costo_consulta">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Descuento consulta</dt>
+                                <dd id="detalle_descuento_consulta_porcentaje">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Costo exámenes</dt>
+                                <dd id="detalle_costo_examenes">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Descuento exámenes</dt>
+                                <dd id="detalle_descuento_examenes_porcentaje">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Costo medicamentos</dt>
+                                <dd id="detalle_costo_medicamentos">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Descuento medicamentos</dt>
+                                <dd id="detalle_descuento_medicamentos_porcentaje">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Subtotal</dt>
+                                <dd id="detalle_subtotal">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Descuento monetario total</dt>
+                                <dd id="detalle_descuento">No registrado</dd>
+                            </div>
+                            <div>
+                                <dt>Total final</dt>
+                                <dd id="detalle_total">No registrado</dd>
+                            </div>
+                        </dl>
+                    </section>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cerrar</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/compartido/cyberdeck.js"></script>
+    <script src="../compartido/formatos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="detalle_visita.js"></script>
+    <script src="fichas_medicas.js"></script>
+</body>
+
+</html>

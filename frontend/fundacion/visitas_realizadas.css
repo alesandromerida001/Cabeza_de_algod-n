@@ -1,0 +1,100 @@
+/* Ajustes limitados a esta pantalla de consulta. */
+.stats-fila {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.stat-tarjeta {
+    min-width: 0;
+    min-height: 150px;
+    padding: 1.5rem;
+    border-top: 5px solid #194b79;
+}
+
+.stat-numero {
+    font-size: 3rem;
+    color: #194b79;
+    overflow-wrap: anywhere;
+}
+
+.stat-etiqueta {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #343a40;
+}
+
+.herramientas-modulo {
+    align-items: end;
+    color: #fff;
+}
+
+.herramientas-modulo label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.busqueda-visitas {
+    flex: 1;
+    min-width: 200px;
+}
+
+.aviso-visitas {
+    width: 100%;
+    max-width: 1100px;
+    color: #fff;
+}
+
+.detalle-seccion+.detalle-seccion {
+    margin-top: 1.5rem;
+    border-top: 1px solid #d1d5d0;
+    padding-top: 1.25rem;
+}
+
+.detalle-seccion h3 {
+    font-size: 1.15rem;
+    color: #194b79;
+    margin-bottom: 1rem;
+}
+
+.detalle-visita {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.5rem;
+    margin: 0;
+}
+
+.detalle-visita dd {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 0.25rem 0 0;
+    color: #252525;
+}
+
+.detalle-visita dt {
+    color: #343a40;
+}
+
+#detalle_total {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+
+    .stats-fila,
+    .detalle-visita {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-tarjeta {
+        min-height: 125px;
+        padding: 1rem 1.25rem;
+    }
+
+    .herramientas-modulo label {
+        width: 100%;
+        min-width: 0;
+    }
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Asilo Cabeza de Algodón</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="/css/cyberdeck.css">
+</head>
+<body>
+
+    <header class="dashboard-header">
+        <div class="logo-text">Asilo Cabeza de Algodón</div>
+        <div class="user-info">
+            <span>Personal del Asilo</span>
+            <button id="btnCerrarSesion" class="btn-outline" type="button" onclick="cerrarSesion()" >Salir</button>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="grid-menu">
+            <button id="btnIrResidentes" class="tarjeta-menu">
+                <h2>Residentes</h2>
+            </button>
+
+            <button
+                id="btnIrSolicitudes"
+                class="tarjeta-menu">
+
+                <h2>
+                    Solicitudes Médicas
+                </h2>
+
+            </button>
+
+            <button id="btnIrVisitas" class="tarjeta-menu">
+                <h2>Visitas Médicas<br>Realizadas</h2>
+            </button>
+
+            <button id="btnEstadosCuenta" class="tarjeta-menu">
+                <h2>Estados de<br>cuenta</h2>
+            </button>
+
+            <button id="btnFinanzas" class="tarjeta-menu"><h2>Finanzas</h2></button>
+            <a href="/reportes/reportes.html" class="tarjeta-menu" style="text-align:center;text-decoration:none"><h2>Centro de Reportes</h2></a>
+
+            <button id="btnIrUsuarios" class="tarjeta-menu">
+                <h2>Usuarios</h2>
+            </button>
+        </div>
+    </main>
+
+    
+
+    <!-- Panel de aviso (éxito/error), lo controla dashboard.js -->
+    <div id="toast" class="toast oculto"></div>
+
+    <script src="/compartido/cyberdeck.js"></script>
+    <script src="../compartido/formatos.js"></script>
+    <script src="../compartido/utils.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

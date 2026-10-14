@@ -1,0 +1,55 @@
+/* Resumen y estados exclusivos de Solicitudes Médicas del Asilo. */
+.stats-fila {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.stat-tarjeta {
+    min-width: 0;
+    min-height: 150px;
+    padding: 1.5rem;
+    border: 1px solid #d1d5d0;
+    border-top: 5px solid #194b79;
+}
+
+.stat-numero {
+    color: #194b79;
+    font-size: clamp(2.5rem, 4vw, 3.25rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.stat-etiqueta {
+    margin-top: 0.65rem;
+    color: #343a40;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.badge-estado {
+    border: 1px solid currentColor;
+}
+
+.badge-estado.Programada {
+    background-color: #e7f0fb;
+    color: #194b79;
+}
+
+.badge-estado.Cancelada {
+    background-color: #fbedef;
+    color: #9b3c42;
+}
+
+@media (max-width: 600px) {
+    .stats-fila {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+    }
+
+    .stat-tarjeta {
+        min-height: 130px;
+        padding: 1.25rem;
+    }
+}

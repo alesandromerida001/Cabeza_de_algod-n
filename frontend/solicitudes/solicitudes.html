@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Solicitudes Médicas | Cabeza de Algodón</title>
+
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <!-- CSS general del sistema -->
+    <link
+        rel="stylesheet"
+        href="../principal/dashboard.css">
+
+    <!-- Ajustes exclusivos de Solicitudes Médicas -->
+    <link rel="stylesheet" href="solicitudes.css">
+
+    <link rel="stylesheet" href="/css/cyberdeck.css">
+</head>
+
+
+<body>
+
+
+    <!-- ==================================================
+         ENCABEZADO
+         ================================================== -->
+
+    <header class="dashboard-header">
+
+        <div class="logo-text">
+            Asilo Cabeza de Algodón
+        </div>
+
+        <div class="user-info">
+
+            <span>
+                Personal del Asilo
+            </span>
+
+            <button
+                id="btnCerrarSesion"
+                class="btn-outline">
+                Salir
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ==================================================
+         CONTENIDO PRINCIPAL
+         ================================================== -->
+
+    <main class="gestion-main">
+
+
+        <!-- TÍTULO Y ACCIONES -->
+
+        <div class="gestion-toolbar"><h1>Solicitudes Médicas</h1>
+            <button id="btnVolver" class="btn btn-secondary">← Volver al menú</button>
+        </div>
+        <div class="stats-fila">
+
+            <div class="stat-tarjeta">
+
+                <p
+                    id="statPendientes"
+                    class="stat-numero">
+                    0
+                </p>
+
+                <p class="stat-etiqueta">
+                    Pendientes
+                </p>
+
+            </div>
+
+
+            <div class="stat-tarjeta">
+
+                <p
+                    id="statProgramadas"
+                    class="stat-numero">
+                    0
+                </p>
+
+                <p class="stat-etiqueta">
+                    Programadas
+                </p>
+
+            </div>
+
+
+            <div class="stat-tarjeta">
+
+                <p
+                    id="statFinalizadas"
+                    class="stat-numero">
+                    0
+                </p>
+
+                <p class="stat-etiqueta">
+                    Finalizadas
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="filtrosEstado" class="filtros-estado" role="group" aria-label="Filtrar por estado">
+    <button type="button" class="btn-filtro" data-estado="" aria-pressed="true">Todas</button>
+    <button type="button" class="btn-filtro" data-estado="Pendiente" aria-pressed="false">Pendientes</button>
+    <button type="button" class="btn-filtro" data-estado="Programada" aria-pressed="false">Programadas</button>
+    <button type="button" class="btn-filtro" data-estado="Finalizada" aria-pressed="false">Finalizadas</button>
+    <button type="button" class="btn-filtro" data-estado="Cancelada" aria-pressed="false">Canceladas</button>
+</div>
+        <div class="herramientas-modulo">
+            <input type="search" id="buscarSolicitud" class="input-busqueda" aria-label="Buscar solicitud" placeholder="Buscar residente, especialidad o motivo...">
+            <button id="btnNuevaSolicitud" class="btn btn-primary">+ Nueva solicitud</button>
+        </div>
+<!-- ==================================================
+             TABLA
+             ================================================== -->
+
+        <div class="tabla-contenedor">
+
+            <table class="tabla-datos">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Residente</th>
+
+                        <th>Especialidad</th>
+
+                        <th>Motivo</th>
+
+                        <th>Enfermero</th>
+
+                        <th>Fecha solicitud</th>
+
+                        <th>Estado</th>
+
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="cuerpoTablaSolicitudes">
+
+                    <!-- JS coloca las solicitudes aquí -->
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- ==================================================
+         MODAL: NUEVA SOLICITUD
+         ================================================== -->
+
+    <div
+        class="modal fade"
+        id="modalSolicitud"
+        tabindex="-1"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Nueva Solicitud Médica
+                    </h5>
+
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+
+                <div class="modal-body">
+
+
+                    <form id="formSolicitud">
+
+
+                        <!-- RESIDENTE -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="buscarResidenteSolicitud"
+                                class="form-label">
+                                Residente
+                            </label>
+                            <input
+                                type="text"
+                                id="buscarResidenteSolicitud"
+                                class="form-control mb-2"
+                                placeholder="Buscar por nombre o DPI..."
+                                autocomplete="off">
+
+                            <select
+                                id="idResidente"
+                                class="form-select">
+
+                                <option value="">
+                                    Seleccione un residente
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- MOTIVO -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="motivo"
+                                class="form-label">
+                                Motivo de la solicitud
+                            </label>
+
+
+                            <textarea
+                                id="motivo"
+                                class="form-control"
+                                rows="3"
+                                maxlength="500"
+                                placeholder="Ej. Dolor frecuente en el pecho"></textarea>
+
+                        </div>
+
+
+
+                        <!-- ESPECIALIDAD -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="especialidad"
+                                class="form-label">
+                                Especialidad requerida
+                            </label>
+
+
+                            <select id="especialidad" class="form-select" required><option value="">Seleccione...</option></select>
+                            <button type="button" class="btn btn-outline-primary mt-2" id="btnNuevaEspecialidad">+ Nueva especialidad</button>
+                            <p data-aviso-catalogo role="status" class="aviso-catalogo"></p>
+
+                        </div>
+
+
+
+                        <!-- ENFERMERO -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="enfermero"
+                                class="form-label">
+                                Enfermero acompañante
+                            </label>
+
+
+                            <input
+                                type="text"
+                                id="enfermero"
+                                class="form-control"
+                                maxlength="150"
+                                placeholder="Nombre del enfermero">
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+
+
+                <div class="modal-footer">
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btnGuardarSolicitud"
+                        class="btn btn-primary">
+                        Crear Solicitud
+                    </button>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         MODAL: VER SOLICITUD
+         ================================================== -->
+
+    <div
+        class="modal fade"
+        id="modalDetalleSolicitud"
+        tabindex="-1"
+        aria-hidden="true">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Detalle de Solicitud
+                    </h5>
+
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+
+                <div class="modal-body">
+
+
+                    <p>
+                        <strong>Residente:</strong>
+                        <span id="detalleResidente"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Especialidad:</strong>
+                        <span id="detalleEspecialidad"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Motivo:</strong>
+                        <span id="detalleMotivo"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Enfermero:</strong>
+                        <span id="detalleEnfermero"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Fecha de solicitud:</strong>
+                        <span id="detalleFechaSolicitud"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Estado:</strong>
+                        <span id="detalleEstado"></span>
+                    </p>
+
+
+                    <hr>
+
+
+                    <p>
+                        <strong>Médico asignado:</strong>
+                        <span id="detalleMedico"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Fecha de cita:</strong>
+                        <span id="detalleFechaCita"></span>
+                    </p>
+
+
+                    <p>
+                        <strong>Hora:</strong>
+                        <span id="detalleHoraCita"></span>
+                    </p>
+
+
+                </div>
+
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         AVISO DEL SISTEMA
+         ================================================== -->
+
+    <div
+        id="toast"
+        class="toast-sistema oculto">
+    </div>
+
+
+
+    <!-- ==================================================
+         JAVASCRIPT
+         ================================================== -->
+
+    <script src="/compartido/cyberdeck.js"></script>
+    <script src="../compartido/formatos.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+
+    
+    <div class="modal fade" id="modalNuevaEspecialidad" tabindex="-1" aria-labelledby="modalNuevaEspecialidadTitulo" aria-hidden="true">
+        <div class="modal-dialog"><div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title" id="modalNuevaEspecialidadTitulo">Nueva especialidad</h5></div>
+            <div class="modal-body">
+                <label for="modalNuevaEspecialidadNombre" class="form-label">Nombre *</label>
+                <input id="modalNuevaEspecialidadNombre" class="form-control" type="text" maxlength="50" autocomplete="off" required>
+                <p class="text-danger mt-2" data-mensaje role="alert"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-guardar>Guardar</button>
+            </div>
+        </div></div>
+    </div>
+    <script src="../compartido/catalogos.js"></script>
+    <script src="solicitudes.js"></script>
+
+
+</body>
+
+</html>

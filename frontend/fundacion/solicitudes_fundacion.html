@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Solicitudes Médicas | Fundación
+    </title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS actual del sistema -->
+    <link rel="stylesheet" href="../principal/dashboard.css">
+
+    <link rel="stylesheet" href="/css/cyberdeck.css">
+</head>
+
+
+<body>
+
+
+    <!-- ==================================================
+         ENCABEZADO
+         ================================================== -->
+
+    <header class="dashboard-header">
+
+        <div class="logo-text">
+            Asilo Cabeza de Algodón
+        </div>
+
+        <div class="user-info">
+
+            <span>Fundación</span>
+
+            <button id="btnCerrarSesion" class="btn-outline">
+                Salir
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ==================================================
+         CONTENIDO
+         ================================================== -->
+
+    <main class="gestion-main">
+
+
+        <div class="gestion-toolbar">
+
+            <div>
+
+                <h1 id="tituloPagina">
+                    Solicitudes Médicas
+                </h1>
+
+                <p id="descripcionPagina">
+                    Gestión de solicitudes recibidas por la Fundación.
+                </p>
+
+            </div>
+
+
+            <button id="btnVolver" class="btn btn-secondary">
+                ← Volver
+            </button>
+
+        </div>
+
+
+
+        <!-- ==================================================
+             CAMBIO RÁPIDO DE VISTA
+             ================================================== -->
+
+        <div class="mb-4">
+
+            <button id="btnVerPendientes" class="btn btn-primary">
+                Pendientes
+            </button>
+
+            <button id="btnVerProgramadas" class="btn btn-outline-primary">
+                Programadas
+            </button>
+
+        </div>
+
+
+
+        <!-- ==================================================
+             TABLA
+             ================================================== -->
+
+        <div class="tabla-contenedor">
+
+            <table class="tabla-datos">
+
+                <thead>
+
+                    <tr>
+                        <th>Residente</th>
+                        <th>Especialidad</th>
+                        <th>Motivo</th>
+                        <th>Enfermero</th>
+                        <th>Fecha solicitud</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="cuerpoTablaSolicitudes">
+
+                    <!-- JS -->
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- ==================================================
+         MODAL PROGRAMAR CITA
+         ================================================== -->
+
+    <div class="modal fade" id="modalProgramar" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Programar cita médica
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+
+                    <!-- ID oculto -->
+                    <input type="hidden" id="idSolicitudProgramar">
+
+
+                    <div class="mb-3">
+
+                        <strong>Residente:</strong>
+
+                        <span id="programarResidente">
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <strong>Especialidad:</strong>
+
+                        <span id="programarEspecialidad">
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <strong>Motivo:</strong>
+
+                        <span id="programarMotivo">
+                        </span>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <!-- MÉDICO -->
+
+                    <div class="mb-3">
+
+                        <label for="medico" class="form-label">
+
+                            Médico especialista
+
+                        </label>
+
+                        <input type="text" id="medico" class="form-control" maxlength="150"
+                            placeholder="Ej. Dr. Carlos Hernández">
+
+                    </div>
+
+
+                    <!-- FECHA -->
+
+                    <div class="mb-3">
+
+                        <label for="fechaCita" class="form-label">
+
+                            Fecha de la cita
+
+                        </label>
+
+                        <input type="date" id="fechaCita" class="form-control">
+
+                    </div>
+
+
+                    <!-- HORA -->
+
+                    <div class="mb-3">
+
+                        <label for="horaCita" class="form-label">
+
+                            Hora de la cita
+
+                        </label>
+
+                        <select id="horaCita" class="form-select">
+
+                            <option value="">
+                                Seleccione un horario
+                            </option>
+
+                            <optgroup label="Jornada de mañana">
+
+                                <option value="09:00">09:00 AM</option>
+                                <option value="09:45">09:45 AM</option>
+                                <option value="10:30">10:30 AM</option>
+                                <option value="11:15">11:15 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="12:45">12:45 PM</option>
+
+                            </optgroup>
+
+                            <optgroup label="Jornada de tarde">
+
+                                <option value="14:00">02:00 PM</option>
+                                <option value="14:45">02:45 PM</option>
+                                <option value="15:30">03:30 PM</option>
+                                <option value="16:15">04:15 PM</option>
+                                <option value="17:00">05:00 PM</option>
+
+                            </optgroup>
+
+                        </select>
+                    </div>
+
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+
+                    <button type="button" id="btnConfirmarProgramacion" class="btn btn-primary">
+
+                        Programar cita
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         MODAL DETALLE
+         ================================================== -->
+
+    <div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Detalle de solicitud
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <p>
+                        <strong>Residente:</strong>
+                        <span id="detalleResidente"></span>
+                    </p>
+
+                    <p>
+                        <strong>Especialidad:</strong>
+                        <span id="detalleEspecialidad"></span>
+                    </p>
+
+                    <p>
+                        <strong>Motivo:</strong>
+                        <span id="detalleMotivo"></span>
+                    </p>
+
+                    <p>
+                        <strong>Enfermero:</strong>
+                        <span id="detalleEnfermero"></span>
+                    </p>
+
+                    <p>
+                        <strong>Estado:</strong>
+                        <span id="detalleEstado"></span>
+                    </p>
+
+                    <hr>
+
+                    <p>
+                        <strong>Médico:</strong>
+                        <span id="detalleMedico"></span>
+                    </p>
+
+                    <p>
+                        <strong>Fecha de cita:</strong>
+                        <span id="detalleFecha"></span>
+                    </p>
+
+                    <p>
+                        <strong>Hora:</strong>
+                        <span id="detalleHora"></span>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==================================================
+     MODAL: REGISTRAR VISITA MÉDICA
+     ================================================== -->
+
+    <div class="modal fade" id="modalVisita" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+
+                <!-- ENCABEZADO -->
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Registrar Visita Médica
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <!-- CUERPO -->
+
+                <div class="modal-body">
+
+
+                    <input type="hidden" id="idSolicitudVisita">
+
+
+                    <!-- DATOS DE LA CITA -->
+
+                    <div class="mb-3">
+
+                        <strong>Residente:</strong>
+
+                        <span id="visitaResidente"></span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <strong>Especialidad:</strong>
+
+                        <span id="visitaEspecialidad"></span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <strong>Médico:</strong>
+
+                        <span id="visitaMedico"></span>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <!-- DIAGNÓSTICO -->
+
+                    <div class="mb-3">
+
+                        <label for="diagnostico" class="form-label">
+
+                            Diagnóstico *
+
+                        </label>
+
+                        <textarea id="diagnostico" class="form-control" rows="3" maxlength="1000"
+                            placeholder="Diagnóstico de la visita"></textarea>
+
+                    </div>
+
+
+                    <!-- ======================================
+                        EXÁMENES
+                        ====================================== -->
+
+                    <h6>
+                        Exámenes
+                    </h6>
+
+
+                    <div class="mb-3">
+
+                        <label for="examenes" class="form-label">
+
+                            Exámenes realizados
+
+                        </label>
+
+                        <textarea id="examenes" class="form-control" rows="2" maxlength="1000"
+                            placeholder="Ej. Hemograma, electrocardiograma"></textarea>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label for="resultadosExamenes" class="form-label">
+
+                            Resultados
+
+                        </label>
+
+                        <textarea id="resultadosExamenes" class="form-control" rows="2" maxlength="1500"
+                            placeholder="Resultados de los exámenes"></textarea>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label for="costoExamenes" class="form-label">
+
+                            Costo de exámenes / laboratorio
+
+                        </label>
+
+                        <input type="text" id="costoExamenes" class="form-control campo-moneda" inputmode="decimal"
+                            placeholder="Q 0.00" autocomplete="off">
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descuentoExamenes" class="form-label">Descuento laboratorio %</label>
+                        <input type="number" id="descuentoExamenes" class="form-control" min="0" max="100" step="0.01"
+                            value="20" required>
+                    </div>
+
+                    <hr>
+
+
+                    <!-- ======================================
+                        MEDICAMENTOS
+                        ====================================== -->
+
+                    <h6>
+                        Medicamentos
+                    </h6>
+
+
+                    <div class="mb-3">
+
+                        <label for="medicamentos" class="form-label">
+
+                            Medicamentos indicados
+
+                        </label>
+
+                        <textarea id="medicamentos" class="form-control" rows="2" maxlength="1000"
+                            placeholder="Ej. Losartán 50 mg"></textarea>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label for="cantidadMedicamentos" class="form-label">
+
+                            Cantidad
+
+                        </label>
+
+                        <input type="text" id="cantidadMedicamentos" class="form-control" maxlength="300"
+                            placeholder="Ej. 30 tabletas">
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label for="indicaciones" class="form-label">
+
+                            Indicaciones
+
+                        </label>
+
+                        <textarea id="indicaciones" class="form-control" rows="2" maxlength="1000"
+                            placeholder="Ej. Una tableta cada 24 horas"></textarea>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label for="costoMedicamentos" class="form-label">
+
+                            Costo de medicamentos
+
+                        </label>
+
+                        <input type="text" id="costoMedicamentos" class="form-control campo-moneda" inputmode="decimal"
+                            placeholder="Q 0.00" autocomplete="off">
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descuentoMedicamentos" class="form-label">Descuento medicamentos %</label>
+                        <input type="number" id="descuentoMedicamentos" class="form-control" min="0" max="100"
+                            step="0.01" value="20" required>
+                    </div>
+
+                    <hr>
+
+
+                    <!-- ======================================
+                        CONSULTA
+                        ====================================== -->
+
+                    <div class="mb-3">
+
+                        <label for="costoConsulta" class="form-label">
+
+                            Costo de consulta
+
+                        </label>
+
+                        <input type="text" id="costoConsulta" class="form-control campo-moneda" inputmode="decimal"
+                            placeholder="Q 0.00" autocomplete="off">
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descuentoConsulta" class="form-label">Descuento consulta %</label>
+                        <input type="number" id="descuentoConsulta" class="form-control" min="0" max="100" step="0.01"
+                            value="20" required>
+                    </div>
+
+                    <!-- OBSERVACIONES -->
+
+                    <div class="mb-3">
+
+                        <label for="observacionesVisita" class="form-label">
+
+                            Observaciones
+
+                        </label>
+
+                        <textarea id="observacionesVisita" class="form-control" rows="3" maxlength="1500"
+                            placeholder="Observaciones adicionales"></textarea>
+
+                    </div>
+
+
+                    <!-- ======================================
+                        PREVISUALIZACIÓN DE COSTOS
+                        ====================================== -->
+
+                    <div class="border rounded p-3">
+
+                        <p>
+                            <strong>Subtotal:</strong>
+                            <span id="previewSubtotal">Q 0.00</span>
+                        </p>
+
+                        <p>
+                            <strong>Descuento consulta:</strong>
+                            <span id="previewDescuentoConsulta">Q 0.00</span>
+                        </p>
+
+                        <p>
+                            <strong>Descuento laboratorio:</strong>
+                            <span id="previewDescuentoExamenes">Q 0.00</span>
+                        </p>
+
+                        <p>
+                            <strong>Descuento medicamentos:</strong>
+                            <span id="previewDescuentoMedicamentos">Q 0.00</span>
+                        </p>
+
+                        <p>
+                            <strong>Descuento total:</strong>
+                            <span id="previewDescuento">Q 0.00</span>
+                        </p>
+
+                        <p class="mb-0">
+                            <strong>Total estimado:</strong>
+                            <span id="previewTotal">Q 0.00</span>
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- PIE -->
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+
+                    <button type="button" id="btnRegistrarVisita" class="btn btn-primary">
+
+                        Registrar visita
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- AVISOS -->
+
+    <div id="toast" class="toast-sistema oculto">
+    </div>
+
+
+
+    <!-- Bootstrap -->
+
+    <script src="/compartido/cyberdeck.js"></script>
+    <script src="../compartido/formatos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+
+    <!-- Nuestro JS -->
+
+    <script src="solicitudes_fundacion.js"></script>
+
+
+</body>
+
+</html>

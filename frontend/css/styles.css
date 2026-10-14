@@ -1,0 +1,244 @@
+:root {
+    --verde-eucalipto: #385E50;
+    --verde-oscuro: #2D4C41;
+    --azul-pizarra: #2B4C59;
+    --gris-vegetal: #EBF0EC;
+    --marfil: #F7F5EF;
+    --blanco: #FFFFFF;
+
+    --texto-principal: #2D3732;
+    --texto-secundario: #64746B;
+    --borde: #C4D3CB;
+
+    --error: #9B3C42;
+    --fondo-error: #FBEDEF;
+
+    --exito: #2F6B4A;
+    --fondo-exito: #EAF4ED;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    background-color: var(--gris-vegetal);
+    color: var(--texto-principal);
+}
+
+/* Estructura principal de la pantalla */
+.pagina-login {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 42% 58%;
+}
+
+/* Sección informativa izquierda */
+.informacion-asilo {
+    background: linear-gradient(145deg, var(--verde-eucalipto), var(--verde-oscuro));
+    color: var(--marfil);
+    padding: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.texto-superior {
+    margin: 0 0 12px;
+    color: #BFD0C6;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.informacion-asilo h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.informacion-asilo p:not(.texto-superior) {
+    max-width: 420px;
+    margin-top: 22px;
+    color: #E4ECE7;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+/* Sección del formulario */
+.contenedor-formulario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 35px 20px;
+    background-color: var(--marfil);
+}
+
+.tarjeta-login {
+    width: 100%;
+    max-width: 430px;
+    padding: 38px;
+    background-color: var(--blanco);
+    border: 1px solid #D1DDD6;
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(43, 76, 89, 0.10);
+}
+
+.tarjeta-login .texto-superior {
+    color: var(--verde-eucalipto);
+}
+
+.tarjeta-login h2 {
+    margin: 0;
+    color: var(--azul-pizarra);
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.descripcion {
+    margin: 10px 0 25px;
+    color: var(--texto-secundario);
+    line-height: 1.5;
+}
+
+/* Campos */
+.grupo-campo {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    color: #43544B;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.fila-etiqueta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input[type="email"],
+#contrasena {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background-color: #FAFCFA;
+    color: var(--texto-principal);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: 0.2s ease;
+}
+
+input[type="email"]:focus,
+#contrasena:focus {
+    outline: none;
+    border-color: var(--verde-eucalipto);
+    background-color: var(--blanco);
+    box-shadow: 0 0 0 3px rgba(56, 94, 80, 0.15);
+}
+
+small {
+    display: block;
+    margin-top: 6px;
+    color: var(--texto-secundario);
+    font-size: 0.8rem;
+}
+
+/* Botones */
+.boton-principal {
+    width: 100%;
+    margin-top: 8px;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--verde-eucalipto);
+    color: var(--blanco);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.boton-principal:hover {
+    background-color: var(--verde-oscuro);
+}
+
+.boton-principal:active {
+    transform: scale(0.99);
+}
+
+#mostrarContrasena {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--azul-pizarra);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#mostrarContrasena:hover {
+    text-decoration: underline;
+}
+
+/* Mensajes que activará JavaScript */
+.mensaje:empty {
+    display: none;
+}
+
+.mensaje {
+    margin-bottom: 18px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.mensaje.error {
+    color: var(--error);
+    background-color: var(--fondo-error);
+    border-left: 4px solid var(--error);
+}
+
+.mensaje.exito {
+    color: var(--exito);
+    background-color: var(--fondo-exito);
+    border-left: 4px solid var(--exito);
+}
+
+/* Adaptación a celular */
+@media (max-width: 768px) {
+    .pagina-login {
+        grid-template-columns: 1fr;
+    }
+
+    .informacion-asilo {
+        min-height: 260px;
+        padding: 45px 30px;
+    }
+
+    .informacion-asilo h1 {
+        font-size: 2rem;
+    }
+
+    .contenedor-formulario {
+        padding: 30px 18px;
+    }
+
+    .tarjeta-login {
+        padding: 28px 22px;
+    }
+}

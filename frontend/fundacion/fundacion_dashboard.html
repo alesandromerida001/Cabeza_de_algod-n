@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Fundación - Asilo Cabeza de Algodón</title>
+    <link rel="stylesheet" href="../principal/dashboard.css">
+    <link rel="stylesheet" href="/css/cyberdeck.css">
+</head>
+<body>
+
+    <header class="dashboard-header">
+        <div class="logo-text">Asilo Cabeza de Algodón</div>
+        <div class="user-info">
+            <span>Fundación</span>
+            <button id="btnCerrarSesion" class="btn-outline">Salir</button>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="grid-menu">
+            <button id="btnSolicitudesPendientes" class="tarjeta-menu">
+                <h2>Solicitudes<br>pendientes</h2>
+            </button>
+
+            <button id="btnSolicitudesProgramadas" class="tarjeta-menu">
+                <h2>Solicitudes<br>programadas</h2>
+            </button>
+
+            <button id="btnVisitasRealizadas" class="tarjeta-menu">
+                <h2>Visitas<br>realizadas</h2>
+            </button>
+
+            <button id="btnFichasMedicas" class="tarjeta-menu">
+                <h2>Fichas<br>Médicas</h2>
+            </button>
+            <button id="btnObligacionesFundacion" class="tarjeta-menu"><h2>Cobros pendientes<br>del Asilo</h2></button>
+            <a href="/reportes/reportes.html" class="tarjeta-menu" style="text-align:center;text-decoration:none"><h2>Centro de Reportes</h2></a>
+        </div>
+    </main>
+
+    <div id="toast" class="toast oculto"></div>
+
+    <script src="/compartido/cyberdeck.js"></script>
+    <script src="../compartido/formatos.js"></script>
+    <script src="../compartido/utils.js"></script>
+    <script src="fundacion_dashboard.js"></script>
+</body>
+</html>

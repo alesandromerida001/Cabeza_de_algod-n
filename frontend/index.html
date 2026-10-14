@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión | Cabeza de Algodón</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="/css/cyberdeck.css">
+</head>
+<body>
+
+    <main class="pagina-login">
+
+        <section class="informacion-asilo">
+            <p class="texto-superior">Sistema de administración</p>
+
+            <h1>Asilo de Ancianos<br> Cabeza de Algodón</h1>
+
+            <p>
+                Gestione la atención y el bienestar de cada adulto mayor
+                con información clara y segura.
+            </p>
+        </section>
+
+        <section class="contenedor-formulario">
+            <div class="tarjeta-login">
+
+                <p class="texto-superior">Acceso seguro</p>
+
+                <h2>Inicie sesión</h2>
+
+                <p class="descripcion">
+                    Ingrese sus credenciales para acceder al sistema.
+                </p>
+
+                <div id="mensaje" class="mensaje" aria-live="polite"></div>
+
+                <form id="formLogin" novalidate>
+
+                    <div class="grupo-campo">
+                        <label for="correo">Correo electrónico</label>
+
+                        <input
+                            type="email"
+                            id="correo"
+                            placeholder="nombre@institucion.gt"
+                            autocomplete="email"
+                        >
+
+                        <small>Use el correo asignado por la administración.</small>
+                    </div>
+
+                    <div class="grupo-campo">
+                        <div class="fila-etiqueta">
+                            <label for="contrasena">Contraseña</label>
+
+                            <button type="button" id="mostrarContrasena">
+                                Mostrar
+                            </button>
+                        </div>
+
+                        <input
+                            type="password"
+                            id="contrasena"
+                            placeholder="Ingrese su contraseña"
+                            autocomplete="current-password"
+                        >
+                    </div>
+
+                    <button type="submit" id="botonIngresar" class="boton-principal">
+                        Ingresar al sistema
+                    </button>
+
+                </form>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/compartido/cyberdeck.js"></script>
+    <script src="login/login.js"></script>
+</body>
+</html>
