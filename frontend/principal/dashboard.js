@@ -22,7 +22,6 @@ if (btnIrResidentes) {
     });
 }
 
-
 const btnIrUsuarios = document.getElementById('btnIrUsuarios');
 
 if (btnIrUsuarios) {
@@ -32,21 +31,14 @@ if (btnIrUsuarios) {
 }
 
 // ==========================================
-// IR AL MODULO DE SOLICITUDES
+// IR AL MÓDULO DE SOLICITUDES
 // ==========================================
-const btnIrSolicitudes =
-    document.getElementById('btnIrSolicitudes');
+const btnIrSolicitudes = document.getElementById('btnIrSolicitudes');
 
 if (btnIrSolicitudes) {
-
-    btnIrSolicitudes.addEventListener(
-        'click',
-        () => {
-
-            window.location.href =
-                '/solicitudes/solicitudes.html';
-        }
-    );
+    btnIrSolicitudes.addEventListener('click', () => {
+        window.location.href = '/solicitudes/solicitudes.html';
+    });
 }
 
 // ==========================================
@@ -54,19 +46,13 @@ if (btnIrSolicitudes) {
 // ==========================================
 
 async function cerrarSesion() {
-
     try {
-
         await fetch('/api/logout', {
             method: 'POST'
         });
-
     } catch (error) {
-
         console.error('Error al cerrar sesión:', error);
-
     } finally {
-
         window.location.href = '/';
     }
 }

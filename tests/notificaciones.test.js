@@ -47,3 +47,35 @@ test('fallo SMTP deja estado incierto, no repite y no afecta tablas financieras'
 test('procesamientos simultáneos en el mismo proceso no duplican envíos',async()=>{
     const e=entorno();await Promise.all([e.worker.procesarUna(),e.worker.procesarUna()]);assert.equal(e.envios.length,1);
 });
+
+test('correo desactivado o configuración inválida no accede a la cola',async()=>{
+    for(const cambio of [{CORREO_HABILITADO:'false'}, {SMTP_PORT:'abc'}, {SMTP_PORT:'0'}, {SMTP_PORT:'65536'}, {SMTP_PORT:'1.5'}, {SMTP_SECURE:'verdadero'}, {SMTP_HOST:'   '}]) {
+        const e=entorno(false,{...configuracion,...cambio});
+        await e.worker.procesarUna();
+        assert.equal(e.worker.configurado(),false);assert.equal(e.consultas.length,0);assert.equal(e.envios.length,0);
+        assert.equal(e.evento.estado,'Pendiente');
+    }
+});
+
+test('prueba seleccionada no ejecuta mantenimiento global ni modifica otras notificaciones',async()=>{
+    const e=entorno(false,{...configuracion,SMTP_SOLO_NOTIFICACION_ID:'1',SMTP_DESTINATARIO_PRUEBA:'familiar@example.test'});
+    await e.worker.procesarUna();await e.worker.procesarUna();
+    assert.equal(e.envios.length,1);
+    assert.ok(e.consultas.every(q=>q.includes('WITH siguiente') || q.includes('WHERE id_notificacion=@id')));
+    assert.ok(e.consultas.filter(q=>q.includes('WITH siguiente')).every(q=>q.includes('id_notificacion=@idPrueba') && q.includes('destinatario=@destinoPrueba')));
+});
+
+test('fallo de persistencia después de aceptación SMTP no provoca reenvío',async()=>{
+    let estado='Pendiente',envios=0;
+    const worker=crear({entorno:configuracion,pool:async()=>({}),disponible:async()=>true,
+        query:async(db,q)=>{
+            if(q.includes('WITH siguiente') && estado==='Pendiente'){
+                estado='Enviando';return {recordset:[{id_notificacion:5,destinatario:'familiar@example.test',asunto:'Pago',cuerpo:'Recibido'}]};
+            }
+            if(q.includes("SET estado='Enviada'"))throw new Error('Fallo simulado de persistencia');
+            if(q.includes("SET estado='Incierta'") && q.includes('id_notificacion=@id'))estado='Incierta';
+            return {recordset:[]};
+        },crearTransporte:()=>({sendMail:async()=>{envios++;return {accepted:['familiar@example.test']};}})});
+    await worker.procesarUna();await worker.procesarUna();
+    assert.equal(estado,'Incierta');assert.equal(envios,1);
+});

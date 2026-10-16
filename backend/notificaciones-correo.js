@@ -7,7 +7,10 @@ module.exports = function notificaciones({ pool, query, disponible, crearTranspo
     const correoValido = valor => /^[^\s@<>;,]+@[^\s@<>;,]+\.[^\s@<>;,]+$/.test(valor || '');
     const prueba = () => Boolean(entorno.SMTP_SOLO_NOTIFICACION_ID || entorno.SMTP_DESTINATARIO_PRUEBA);
     const pruebaValida = () => !prueba() || (/^[1-9]\d*$/.test(entorno.SMTP_SOLO_NOTIFICACION_ID || '') && Number(entorno.SMTP_SOLO_NOTIFICACION_ID)<=2147483647 && correoValido(entorno.SMTP_DESTINATARIO_PRUEBA));
-    const configurado = () => entorno.CORREO_HABILITADO === 'true' && Boolean(entorno.SMTP_HOST && entorno.SMTP_USER && entorno.SMTP_PASS && entorno.SMTP_FROM) && pruebaValida();
+    const configurado = () => entorno.CORREO_HABILITADO === 'true'
+        && [entorno.SMTP_HOST, entorno.SMTP_USER, entorno.SMTP_PASS, entorno.SMTP_FROM].every(valor => typeof valor === 'string' && valor.trim())
+        && /^\d+$/.test(entorno.SMTP_PORT || '587') && Number(entorno.SMTP_PORT || 587) >= 1 && Number(entorno.SMTP_PORT || 587) <= 65535
+        && [undefined, '', 'true', 'false'].includes(entorno.SMTP_SECURE) && pruebaValida();
     let ocupado = false, timer;
     async function procesarUna() {
         if (ocupado || !configurado()) return;
@@ -16,11 +19,14 @@ module.exports = function notificaciones({ pool, query, disponible, crearTranspo
         try {
             db = await pool();
             if (!await disponible(db)) return;
-            // Una caída tras entregar a SMTP es ambigua: no reenviar automáticamente.
-            await query(db, "UPDATE dbo.NotificacionesCorreo SET estado='Incierta',error=N'Proceso interrumpido; verificar entrega en SMTP antes de cualquier reenvío.' WHERE estado='Enviando' AND ultimo_intento<DATEADD(minute,-5,SYSUTCDATETIME())");
-            // Un correo antes ausente se toma del contacto actual, sin cambiar los ya enviados.
-            await query(db, `UPDATE n SET destinatario=h.correo_responsable FROM dbo.NotificacionesCorreo n JOIN dbo.Huespedes h ON h.id_residente=n.id_residente
+            // La prueba no modifica contactos ni estados de otros eventos de la cola.
+            if (!prueba()) {
+                // Una caída tras entregar a SMTP es ambigua: no reenviar automáticamente.
+                await query(db, "UPDATE dbo.NotificacionesCorreo SET estado='Incierta',error=N'Proceso interrumpido; verificar entrega en SMTP antes de cualquier reenvío.' WHERE estado='Enviando' AND ultimo_intento<DATEADD(minute,-5,SYSUTCDATETIME())");
+                // Un correo antes ausente se toma del contacto actual, sin cambiar los ya enviados.
+                await query(db, `UPDATE n SET destinatario=h.correo_responsable FROM dbo.NotificacionesCorreo n JOIN dbo.Huespedes h ON h.id_residente=n.id_residente
                 WHERE n.estado='Pendiente' AND n.destinatario IS NULL AND h.correo_responsable IS NOT NULL`);
+            }
             evento = (await query(db, `;WITH siguiente AS(SELECT TOP(1) * FROM dbo.NotificacionesCorreo WITH(UPDLOCK,READPAST,READCOMMITTEDLOCK)
                 WHERE estado='Pendiente' AND destinatario IS NOT NULL
                 AND (@idPrueba IS NULL OR id_notificacion=@idPrueba)
