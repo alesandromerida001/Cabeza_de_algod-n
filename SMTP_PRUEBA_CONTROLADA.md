@@ -14,7 +14,22 @@ Con CORREO_HABILITADO distinto de `true`, o configuración inválida, el trabaja
 
 ## Estado actualizado: 16/oct/2026
 
-El operador configuró Gmail SMTP (puerto 465 y TLS implícito). La prueba autorizada de la notificación 9 realizó un único intento: Gmail respondió `250 2.0.0 OK` y la cola quedó en Enviada. Esto acredita aceptación SMTP, no lectura ni recepción en bandeja. No repetir esa notificación ni reiniciar su estado. Mantener los filtros hasta decidir por separado cómo tratar la cola antigua.
+El operador configuró Gmail SMTP (puerto 465 y TLS implícito). La prueba autorizada de la notificación 9 realizó un único intento: Gmail respondió `250 2.0.0 OK` y la cola quedó en Enviada. Esto acredita aceptación SMTP, no lectura ni recepción en bandeja. No repetir esa notificación ni reiniciar su estado.
+
+Posteriormente el operador autorizó el modo automático general y los destinatarios efectivos de la cola: alesandromerida001@gmail.com y roblestito331@gmail.com. Se reinició el backend para cargar la configuración local ya actualizada por el operador, sin modificar secretos. Se confirmó aceptación SMTP 250 y estado Enviada en avisos procesados por el temporizador. Los registros sin dirección disponible permanecen pendientes.
+
+Resultado de la verificación real: 13 pendientes anteriores procesados una sola vez y dos avisos nuevos (19: cita de solicitud 8; 20: pago 6) generados durante la prueba, aceptados por Gmail con 250 y persistidos como Enviada con intentos=1. La notificación 9 no se repitió. Total al cierre: 16 Enviadas, cuatro Pendientes sin correo (1, 2, 4, 17). Recepción en bandeja de estos nuevos mensajes pendiente de confirmación del operador. Suite automatizada: 95/95 aprobadas.
+
+## Operación automática general
+
+- CORREO_HABILITADO=true, con SMTP_SOLO_NOTIFICACION_ID y SMTP_DESTINATARIO_PRUEBA ausentes o vacíos. Reiniciar Node tras cambios de configuración; el proceso no recarga .env en caliente.
+- Ejecutar el backend normalmente con npm start. Su arranque ya llama iniciarCorreos: procesa como máximo un aviso por ciclo de 30 segundos mientras el proceso esté activo. No requiere scripts manuales por evento.
+- El modo general consume también pendientes antiguos. Las direcciones futuras deben ser contactos autorizados: la cola no contiene una lista de autorizaciones. Revisar cualquier nuevo contacto antes de usar datos de prueba; no introducir destinatarios ajenos.
+- La aceptación SMTP se registra con ID y código de respuesta, sin contenido, dirección ni secretos. Corroborar Enviada en Notificaciones; un fallo posterior al envío puede dejar Incierta y exige revisión, nunca reinicio automático del estado.
+- El envío no genera mensualidades: MENSUALIDADES_AUTOMATICAS sigue desactivado. Los cargos/mensualidades que se registren por los flujos existentes generan sus propios avisos transaccionales.
+- Para Azure, proporcionar las mismas variables mediante configuración privada del servicio, asegurar conexión a SQL y salida TLS a Gmail y mantener el proceso en ejecución. El temporizador no corre si el alojamiento suspende el proceso; debe elegirse/configurarse un alojamiento que lo mantenga activo. No se realizó despliegue ni validación de infraestructura Azure. Preferir una sola instancia del procesador en esta etapa; los bloqueos SQL existentes siguen protegiendo la toma del aviso.
+
+La sección siguiente de prueba por ID se conserva como procedimiento opcional de diagnóstico, no como requisito de operación normal.
 
 ## Referencia de configuración
 

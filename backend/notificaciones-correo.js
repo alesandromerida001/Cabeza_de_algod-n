@@ -44,6 +44,8 @@ module.exports = function notificaciones({ pool, query, disponible, crearTranspo
             const resultado = await transporte.sendMail({ from: entorno.SMTP_FROM, to: evento.destinatario, subject: evento.asunto, text: evento.cuerpo, html: plantilla(evento.asunto,evento.cuerpo),
                 messageId: `<asilo-evento-${evento.id_notificacion}@${entorno.SMTP_MESSAGE_DOMAIN || 'asilo.local'}>` });
             if (!resultado.accepted?.length) throw new Error('NO_ACEPTADO');
+            // Registrar aceptación sin destinatarios, cuerpo ni credenciales (también útil en Azure).
+            console.info('Notificaciones: aceptación SMTP', { id: evento.id_notificacion, codigo: /^\d{3}/.exec(String(resultado.response || ''))?.[0] || 'no informado' });
             await query(db, "UPDATE dbo.NotificacionesCorreo SET estado='Enviada',enviado_en=SYSUTCDATETIME(),error=NULL WHERE id_notificacion=@id AND estado='Enviando'", { id: evento.id_notificacion });
         } catch (error) {
             if (evento && db) {
