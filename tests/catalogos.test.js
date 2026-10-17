@@ -35,11 +35,12 @@ function servidor(opciones = {}) {
         }
     }
     const sql = { Int: 'Int', VarChar: n => `varchar(${n})`, connect: async () => ({ request: () => new Request() }) };
-    const app = { use() {}, listen() {} };
+    const ajustes = {};
+    const app = { use() {}, listen(puerto) { ajustes.puerto = puerto; }, set(clave, valor) { ajustes[clave] = valor; } };
     for (const metodo of ['get', 'post', 'put', 'delete']) app[metodo] = (url, ...handlers) => rutas.set(`${metodo} ${url}`, handlers);
     const express = Object.assign(() => app, { json() {}, static() {} });
     vm.runInNewContext(source, { console: { log() {}, error() {} }, __dirname: path.join(root, 'backend'),
-        process: { env: { JWT_SECRET: 'catalogos-test' } }, require(nombre) {
+        process: { env: { JWT_SECRET: 'catalogos-test', ...opciones.env } }, require(nombre) {
             if (nombre === './config/errores-db') return require('../backend/config/errores-db');
             if (nombre === './reportes') return require('../backend/reportes');
             if (nombre === './finanzas') return require('../backend/finanzas');
@@ -50,10 +51,10 @@ function servidor(opciones = {}) {
             return require(nombre);
         }
     });
-    return { consultas, actor, async ejecutar(ruta, body = {}, token = jwt.sign({ id: 1, tipo_personal: 'Asilo' }, 'catalogos-test')) {
+    return { consultas, actor, ajustes, async ejecutar(ruta, body = {}, token = jwt.sign({ id: 1, tipo_personal: 'Asilo' }, 'catalogos-test')) {
         let status = 200, payload, cookie;
         const res = { status(n) { status = n; return this; }, json(data) { payload = data; },
-            cookie(nombre, valor, opciones) { cookie = { nombre, valor, opciones }; }, clearCookie() {} };
+            cookie(nombre, valor, opciones) { cookie = { nombre, valor, opciones }; }, clearCookie(nombre, opciones) { cookie = { nombre, opciones }; } };
         const req = { body, params: ruta.startsWith('put') ? { id: '1' } : {}, cookies: token ? { token } : {} };
         const handlers = rutas.get(ruta);
         assert.ok(handlers, ruta);
@@ -210,5 +211,20 @@ test('errores al guardar usuario permanecen en el modal y conservan campos', asy
         assert.equal(cerrado, false);
         assert.equal(boton.disabled, false);
         for (const [id, valor] of Object.entries(valores)) assert.equal(elementos[id].value, valor);
+    }
+});
+
+test('Azure: puerto, proxy explícito y cookies seguras coherentes en login/logout', async () => {
+    for (const production of [false, true]) {
+        const app = servidor({ env: production ? { NODE_ENV: 'production', PORT: '8080', TRUST_PROXY: '1' } : {} });
+        const login = await app.ejecutar('post /api/login', { correo: 'ana@example.test', contrasena: 'Prueba123!' });
+        const logout = await app.ejecutar('post /api/logout');
+        assert.equal(login.status, 200);
+        assert.equal(login.cookie.opciones.secure, production);
+        assert.equal(logout.cookie.opciones.secure, production);
+        assert.equal(logout.cookie.opciones.httpOnly, true);
+        assert.equal(logout.cookie.opciones.sameSite, 'lax');
+        assert.equal(app.ajustes.puerto, production ? '8080' : 3000);
+        assert.equal(app.ajustes['trust proxy'], production ? 1 : undefined);
     }
 });

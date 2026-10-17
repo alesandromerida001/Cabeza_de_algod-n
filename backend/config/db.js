@@ -6,6 +6,19 @@
 
 require('dotenv').config();
 
+const produccion = process.env.NODE_ENV === 'production';
+function booleano(nombre, predeterminado) {
+    const valor = process.env[nombre];
+    if (valor === undefined || valor === '') return predeterminado;
+    if (valor !== 'true' && valor !== 'false') throw new Error(`${nombre} debe ser true o false.`);
+    return valor === 'true';
+}
+const encrypt = booleano('DB_ENCRYPT', produccion);
+const trustServerCertificate = booleano('DB_TRUST_SERVER_CERTIFICATE', !produccion);
+if (produccion && (!encrypt || trustServerCertificate)) {
+    throw new Error('Producción requiere cifrado SQL y validación del certificado.');
+}
+
 const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -15,8 +28,8 @@ const dbConfig = {
     requestTimeout: 15000,
     pool: { max: 10, min: 0, idleTimeoutMillis: 30000, acquireTimeoutMillis: 15000 },
     options: {
-        encrypt: false,
-        trustServerCertificate: true
+        encrypt,
+        trustServerCertificate
     }
 };
 

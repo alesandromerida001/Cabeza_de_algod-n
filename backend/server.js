@@ -27,6 +27,9 @@ const formatos = require('../frontend/compartido/formatos');
 const dbConfig = require('./config/db');
 
 const app = express();
+const produccion = process.env.NODE_ENV === 'production';
+// Activar solo detrás del proxy conocido de App Service, no confiar en cualquier origen.
+if (process.env.TRUST_PROXY === '1') app.set('trust proxy', 1);
 
 
 // ==========================================================
@@ -295,7 +298,7 @@ app.post('/api/login', async (req, res) => {
         // Guardamos JWT en cookie HttpOnly
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,      // localhost usa HTTP
+            secure: produccion, // HTTPS en producción; HTTP local conserva compatibilidad.
             sameSite: 'lax',
             maxAge: 2 * 60 * 60 * 1000
         });
@@ -328,7 +331,7 @@ app.post('/api/logout', (req, res) => {
 
     res.clearCookie('token', {
         httpOnly: true,
-        secure: false,
+        secure: produccion,
         sameSite: 'lax'
     });
 
@@ -2235,7 +2238,7 @@ app.get(
 // 8. ARRANQUE DEL SERVIDOR
 // ==========================================================
 
-const PUERTO = 3000;
+const PUERTO = process.env.PORT || 3000;
 
 // Último control para errores asíncronos de Express y JSON inválido, sin exponer SQL.
 app.use((error, req, res, next) => {

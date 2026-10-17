@@ -49,3 +49,18 @@ test('todas las páginas incluyen componentes; fuentes usadas no contienen discr
     assert.doesNotMatch(fs.readFileSync('backend/reportes-exportar.js','utf8'),/Rajdhani-SemiBold/);
     assert.doesNotMatch(fs.readFileSync('frontend/reportes/reportes.css','utf8'),/Rajdhani-SemiBold/);
 });
+
+test('SQL: TLS obligatorio y certificado validado en producción; configuración local conservada', () => {
+    const source = fs.readFileSync('backend/config/db.js', 'utf8');
+    const cargar = env => { const ctx = { module: { exports: {} }, process: { env }, require: () => ({ config() {} }) }; vm.runInNewContext(source, ctx); return ctx.module.exports; };
+    assert.equal(cargar({}).options.encrypt, false);
+    assert.equal(cargar({}).options.trustServerCertificate, true);
+    const azure = cargar({ NODE_ENV: 'production', DB_PORT: '1433' });
+    assert.equal(azure.options.encrypt, true);
+    assert.equal(azure.options.trustServerCertificate, false);
+    assert.equal(azure.port, 1433);
+    assert.throws(() => cargar({ NODE_ENV: 'production', DB_ENCRYPT: 'false' }), /Producción/);
+    assert.throws(() => cargar({ NODE_ENV: 'production', DB_TRUST_SERVER_CERTIFICATE: 'true' }), /Producción/);
+    assert.throws(() => cargar({ DB_ENCRYPT: 'yes' }), /true o false/);
+    assert.equal(cargar({ DB_ENCRYPT: 'true', DB_TRUST_SERVER_CERTIFICATE: 'false' }).options.encrypt, true);
+});
